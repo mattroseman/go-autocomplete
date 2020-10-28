@@ -5,24 +5,21 @@ package trie
 
 import "strings"
 
-type edge struct {
-	label string
-	target node
-}
-
 type node struct {
-	children map[byte]edge // maps the Edge's label's first character to the Edge itself
+	edgeLabel string
+	children map[byte]*node // maps a single character to a child node that will contain the rest of the edgeLabel
 	endOfWord bool
 }
 
 type trie struct {
-	root node
+	root *node
 }
 
-func NewTrie() trie {
-	return trie{
-		root: node{
-			children: make(map[byte]edge),
+func NewTrie() *trie {
+	return &trie{
+		root: &node{
+			edgeLabel: "",
+			children: make(map[byte]*node),
 			endOfWord: false,
 		},
 	}
@@ -30,13 +27,93 @@ func NewTrie() trie {
 
 // AddWord adds a given word to the trie t
 func (t *trie) AddWord(word string) error {
+	if len(word) == 0 {
+		return nil
+	}
+
 	word = strings.ToLower(word)
 
-	t.root.children[word[0]] = edge{
-		label: word,
-		target: node{
-			endOfWord: true,
-		},
+	currentNode := t.root
+
+	for i := 0; i < len(word); {
+		char := word[i]
+
+		// if a child node exists for char
+		if child, ok := currentNode.children[char]; ok {
+			// if the edge label for the child node matches what's left of the word
+			// edge label: 'abc', what's left of the word: 'abc'
+			if child.edgeLabel == word[i:] {
+				// mark the child node as an end of a word
+				child.endOfWord = true
+
+				return nil
+			}
+
+			commonPrefix := getCommonPrefix(child.edgeLabel, word[i:])
+
+			// if the edge label for the child contains the entirety of what's left of the word plus some extra
+			// edge label: 'abcdef', what's left of the word: 'abc'
+			if len(commonPrefix) < len(child.edgeLabel) && len(commonPrefix) == len(word[i:]) {
+				// insert a new node between current node and child
+
+				// make the new node with an edge label of what's left of the word and add child to children
+				newNode := &node{
+					edgeLabel: word[i:],
+					children: map[byte]*node{word[i]: child},
+					endOfWord: true,
+				}
+
+				// change the child's edge label to be the leftover of the previous edge label
+				child.edgeLabel = child.edgeLabel[len(word[i:]):]
+
+				// make the new node a child of the current node
+				currentNode.children[char] = newNode
+
+				return nil
+			}
+
+			// if the edge label and what's left of the word share a common prefix, but differ at some point
+			// edge label: 'abcdef', what's left of the word: 'abcxyz'
+			if len(commonPrefix) < len(child.edgeLabel) && len(commonPrefix) < len(word[i:]) {
+				// insert a branching node between current node and child and give it a new node child
+
+				// create a new node that will be a child of currentNode and have two edges one going to child and one to another new node
+				newNode := &node{
+					edgeLabel: commonPrefix,
+					children: map[byte]*node{child.edgeLabel[len(commonPrefix)]: child},
+					endOfWord: false,
+				}
+
+				// change the child's edge label to be the leftover of the previous edge label
+				child.edgeLabel = child.edgeLabel[len(commonPrefix):]
+
+				// make the new node a child of the current node
+				currentNode.children[char] = newNode
+
+				// add another new node as a child of the previous new node with a label of what's leftover of the word
+				newNode.children[word[len(commonPrefix)]] = &node{
+					edgeLabel: word[len(commonPrefix):],
+					children: make(map[byte]*node),
+					endOfWord: true,
+				}
+
+				return nil
+			}
+
+			// the last option is that what's left of the word contains the entirety of the edge label plus some extra
+			// edge label: 'abc', what's left of the word: 'abcdef'
+			// follow the edge to the next node and increment i to account for the edge's label
+			i += len(child.edgeLabel)
+			currentNode = child
+		} else {
+			currentNode.children[char] = &node{
+				edgeLabel: word[i:],
+				children: make(map[byte]*node),
+				endOfWord: true,
+			}
+
+			return nil
+		}
 	}
 
 	return nil

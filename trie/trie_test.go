@@ -1,30 +1,42 @@
 package trie
 
-import "testing"
+import (
+	"testing"
+	"reflect"
+)
 
 func TestAddWord(t *testing.T) {
-	trie := NewTrie()
-	testWord := "cucumber"
+	for _, test := range addWordTestCases {
+		testWord := test.input
+		expectedTrie := &test.expected
 
-	err := trie.AddWord(testWord)
-	if err != nil {
-		t.Errorf("Something went wrong adding word 'cucumber' to trie\n%s", err)
+		trie := NewTrie()
+
+		err := trie.AddWord(testWord)
+		if err != nil {
+			t.Errorf("Something went wrong adding word '%s' to the trie\n%s\n", testWord, err)
+		}
+
+		if !reflect.DeepEqual(trie, expectedTrie) {
+			t.Errorf("The trie after adding word '%s' does not match the expected result", testWord)
+		}
 	}
+}
 
-	currentNode := trie.root
+func TestAddWords(t *testing.T) {
+	for _, test := range addWordsTestCases {
+		testWords := test.input
+		expectedTrie := &test.expected
 
-	for i := 0; i < len(testWord); {
-		if edge, ok := currentNode.children[testWord[i]]; ok {
-			if len(testWord[i:]) <= len(edge.label) && testWord[i:i + len(edge.label)] == edge.label {
-				currentNode = edge.target
-				i += len(edge.label)
-			} else {
-				t.Errorf("The added word, %s, was not found in the trie after calling AddWord", testWord)
-				break
-			}
-		} else {
-			t.Errorf("The added word, %s, was not found in the trie after calling AddWord", testWord)
-			break
+		trie := NewTrie()
+
+		err := trie.AddWords(testWords)
+		if err != nil {
+			t.Errorf("Something went wrong adding words %v to the trie\n%s\n", testWords, err)
+		}
+
+		if !reflect.DeepEqual(trie, expectedTrie) {
+			t.Errorf("The trie after adding words %v does not match the expected result", testWords)
 		}
 	}
 }
