@@ -12,10 +12,7 @@ func TestAddWord(t *testing.T) {
 
 		trie := NewTrie()
 
-		err := trie.AddWord(testWord)
-		if err != nil {
-			t.Errorf("Something went wrong adding word '%s' to the trie\n%s\n", testWord, err)
-		}
+		trie.AddWord(testWord)
 
 		if !reflect.DeepEqual(trie, expectedTrie) {
 			t.Errorf("The trie after adding word '%s' does not match the expected result", testWord)
@@ -30,10 +27,7 @@ func TestAddWords(t *testing.T) {
 
 		trie := NewTrie()
 
-		err := trie.AddWords(testWords)
-		if err != nil {
-			t.Errorf("Something went wrong adding words %v to the trie\n%s\n", testWords, err)
-		}
+		trie.AddWords(testWords)
 
 		if !reflect.DeepEqual(trie, expectedTrie) {
 			t.Errorf("The trie after adding words %v does not match the expected result", testWords)

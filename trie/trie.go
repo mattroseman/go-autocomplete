@@ -7,8 +7,8 @@ import "strings"
 
 type node struct {
 	edgeLabel string
-	children map[byte]*node // maps a single character to a child node that will contain the rest of the edgeLabel
 	endOfWord bool
+	children map[byte]*node // maps a single character to a child node that will contain the rest of the edgeLabel
 }
 
 type trie struct {
@@ -19,16 +19,16 @@ func NewTrie() *trie {
 	return &trie{
 		root: &node{
 			edgeLabel: "",
-			children: make(map[byte]*node),
 			endOfWord: false,
+			children: make(map[byte]*node),
 		},
 	}
 }
 
 // AddWord adds a given word to the trie t
-func (t *trie) AddWord(word string) error {
+func (t *trie) AddWord(word string) {
 	if len(word) == 0 {
-		return nil
+		return
 	}
 
 	word = strings.ToLower(word)
@@ -59,8 +59,8 @@ func (t *trie) AddWord(word string) error {
 				// make the new node with an edge label of what's left of the word and add child to children
 				newNode := &node{
 					edgeLabel: word[i:],
-					children: map[byte]*node{child.edgeLabel[len(word[i:])]: child},
 					endOfWord: true,
+					children: map[byte]*node{child.edgeLabel[len(word[i:])]: child},
 				}
 
 				// change the child's edge label to be the leftover of the previous edge label
@@ -80,8 +80,8 @@ func (t *trie) AddWord(word string) error {
 				// create a new node that will be a child of currentNode and have two edges one going to child and one to another new node
 				newNode := &node{
 					edgeLabel: commonPrefix,
-					children: map[byte]*node{child.edgeLabel[len(commonPrefix)]: child},
 					endOfWord: false,
+					children: map[byte]*node{child.edgeLabel[len(commonPrefix)]: child},
 				}
 
 				// change the child's edge label to be the leftover of the previous edge label
@@ -93,8 +93,8 @@ func (t *trie) AddWord(word string) error {
 				// add another new node as a child of the previous new node with a label of what's leftover of the word
 				newNode.children[word[len(commonPrefix)]] = &node{
 					edgeLabel: word[len(commonPrefix):],
-					children: make(map[byte]*node),
 					endOfWord: true,
+					children: make(map[byte]*node),
 				}
 
 				break
@@ -108,26 +108,24 @@ func (t *trie) AddWord(word string) error {
 		} else {
 			currentNode.children[char] = &node{
 				edgeLabel: word[i:],
-				children: make(map[byte]*node),
 				endOfWord: true,
+				children: make(map[byte]*node),
 			}
 
 			break
 		}
 	}
 
-	return nil
+	return
 }
 
 // AddWords adds the given words to the trie t
-func (t *trie) AddWords(words []string) error {
+func (t *trie) AddWords(words []string) {
 	for i := 0; i < len(words); i++ {
-		if err := t.AddWord(words[i]); err != nil {
-			return err
-		}
+		t.AddWord(words[i])
 	}
 
-	return nil
+	return
 }
 
 // DeleteWord removes the given word from the trie t
