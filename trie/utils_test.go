@@ -4,20 +4,22 @@ import (
 	"testing"
 )
 
-func TestGetCommonPrefix(t *testing.T) {
-	tests := []struct{
-		inputA string
-		inputB string
-		expected string
-	}{
-		{"abcdefg", "abcxyz", "abc"},
-		{"banana", "cucumber", ""},
-		{"bread", "bread", "bread"},
-		{"a", "a", "a"},
-		{"", "", ""},
-		{"optics", "optimize", "opti"},
-	}
+type Test struct {
+	inputA string
+	inputB string
+	expected string
+}
 
+var tests = []Test{
+	{"abcdefg", "abcxyz", "abc"},
+	{"banana", "cucumber", ""},
+	{"bread", "bread", "bread"},
+	{"a", "a", "a"},
+	{"", "", ""},
+	{"optics", "optimize", "opti"},
+}
+
+func TestGetCommonPrefix(t *testing.T) {
 	for _, test := range tests {
 		prefix := getCommonPrefix(test.inputA, test.inputB)
 

@@ -46,7 +46,7 @@ func (t *trie) AddWord(word string) error {
 				// mark the child node as an end of a word
 				child.endOfWord = true
 
-				return nil
+				break
 			}
 
 			commonPrefix := getCommonPrefix(child.edgeLabel, word[i:])
@@ -59,7 +59,7 @@ func (t *trie) AddWord(word string) error {
 				// make the new node with an edge label of what's left of the word and add child to children
 				newNode := &node{
 					edgeLabel: word[i:],
-					children: map[byte]*node{word[i]: child},
+					children: map[byte]*node{child.edgeLabel[len(word[i:])]: child},
 					endOfWord: true,
 				}
 
@@ -69,7 +69,7 @@ func (t *trie) AddWord(word string) error {
 				// make the new node a child of the current node
 				currentNode.children[char] = newNode
 
-				return nil
+				break
 			}
 
 			// if the edge label and what's left of the word share a common prefix, but differ at some point
@@ -97,7 +97,7 @@ func (t *trie) AddWord(word string) error {
 					endOfWord: true,
 				}
 
-				return nil
+				break
 			}
 
 			// the last option is that what's left of the word contains the entirety of the edge label plus some extra
@@ -112,7 +112,7 @@ func (t *trie) AddWord(word string) error {
 				endOfWord: true,
 			}
 
-			return nil
+			break
 		}
 	}
 

@@ -1,9 +1,11 @@
 package trie
 
-var addWordTestCases = []struct{
+type addWordTest struct {
 	input string
 	expected trie
-}{
+}
+
+var addWordTestCases = []addWordTest{
 	{
 		"cucumber",
 		trie{
@@ -59,10 +61,22 @@ var addWordTestCases = []struct{
 	},
 }
 
-var addWordsTestCases = []struct{
+type addWordsTest struct {
 	input []string
 	expected trie
-}{
+}
+
+var addWordsTestCases = []addWordsTest{
+	{
+		[]string{},
+		trie{
+			root: &node{
+				edgeLabel: "",
+				children: make(map[byte]*node),
+				endOfWord: false,
+			},
+		},
+	},
 	{
 		[]string{"cucumber", "banana", "bacon"},
 		trie{
@@ -89,6 +103,77 @@ var addWordsTestCases = []struct{
 							},
 						},
 						endOfWord: false,
+					},
+				},
+				endOfWord: false,
+			},
+		},
+	},
+	{
+		[]string{"benchpress", "bench"},
+		trie{
+			root: &node{
+				edgeLabel: "",
+				children: map[byte]*node{
+					'b': &node{
+						edgeLabel: "bench",
+						children: map[byte]*node{
+							'p': &node{
+								edgeLabel: "press",
+								children: make(map[byte]*node),
+								endOfWord: true,
+							},
+						},
+						endOfWord: true,
+					},
+				},
+				endOfWord: false,
+			},
+		},
+	},
+	{
+		[]string{"banana", "banner", "ban"},
+		trie{
+			root: &node{
+				edgeLabel: "",
+				children: map[byte]*node{
+					'b': &node{
+						edgeLabel: "ban",
+						children: map[byte]*node{
+							'a': &node{
+								edgeLabel: "ana",
+								children: make(map[byte]*node),
+								endOfWord: true,
+							},
+							'n': &node{
+								edgeLabel: "ner",
+								children: make(map[byte]*node),
+								endOfWord: true,
+							},
+						},
+						endOfWord: true,
+					},
+				},
+				endOfWord: false,
+			},
+		},
+	},
+	{
+		[]string{"ban", "banana"},
+		trie{
+			root: &node{
+				edgeLabel: "",
+				children: map[byte]*node{
+					'b': &node{
+						edgeLabel: "ban",
+						children: map[byte]*node{
+							'a': &node{
+								edgeLabel: "ana",
+								children: make(map[byte]*node),
+								endOfWord: true,
+							},
+						},
+						endOfWord: true,
 					},
 				},
 				endOfWord: false,
