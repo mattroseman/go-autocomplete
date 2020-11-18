@@ -2,13 +2,13 @@ package trie
 
 type addWordTest struct {
 	input string
-	expected trie
+	expected Trie
 }
 
 var addWordTestCases = []addWordTest{
 	{
 		"cucumber",
-		trie{
+		Trie{
 			root: &node{
 				children: map[byte]*node{
 					'c': &node{
@@ -22,7 +22,7 @@ var addWordTestCases = []addWordTest{
 	},
 	{
 		"test",
-		trie{
+		Trie{
 			root: &node{
 				children: map[byte]*node{
 					't': &node{
@@ -36,7 +36,7 @@ var addWordTestCases = []addWordTest{
 	},
 	{
 		"",
-		trie{
+		Trie{
 			root: &node{
 				edgeLabel: "",
 				endOfWord: false,
@@ -46,7 +46,7 @@ var addWordTestCases = []addWordTest{
 	},
 	{
 		"cUCumBeR",
-		trie{
+		Trie{
 			root: &node{
 				children: map[byte]*node{
 					'c': &node{
@@ -62,13 +62,13 @@ var addWordTestCases = []addWordTest{
 
 type addWordsTest struct {
 	input []string
-	expected trie
+	expected Trie
 }
 
 var addWordsTestCases = []addWordsTest{
 	{
 		[]string{},
-		trie{
+		Trie{
 			root: &node{
 				edgeLabel: "",
 				endOfWord: false,
@@ -78,7 +78,7 @@ var addWordsTestCases = []addWordsTest{
 	},
 	{
 		[]string{"cucumber", "banana", "bacon"},
-		trie{
+		Trie{
 			root: &node{
 				children: map[byte]*node{
 					'c': &node{
@@ -108,7 +108,7 @@ var addWordsTestCases = []addWordsTest{
 	},
 	{
 		[]string{"benchpress", "bench"},
-		trie{
+		Trie{
 			root: &node{
 				children: map[byte]*node{
 					'b': &node{
@@ -128,7 +128,7 @@ var addWordsTestCases = []addWordsTest{
 	},
 	{
 		[]string{"banana", "banner", "ban"},
-		trie{
+		Trie{
 			root: &node{
 				children: map[byte]*node{
 					'b': &node{
@@ -153,7 +153,7 @@ var addWordsTestCases = []addWordsTest{
 	},
 	{
 		[]string{"ban", "banana"},
-		trie{
+		Trie{
 			root: &node{
 				children: map[byte]*node{
 					'b': &node{

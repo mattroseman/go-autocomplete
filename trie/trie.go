@@ -11,12 +11,13 @@ type node struct {
 	children map[byte]*node // maps a single character to a child node that will contain the rest of the edgeLabel
 }
 
-type trie struct {
+type Trie struct {
 	root *node
 }
 
-func NewTrie() *trie {
-	return &trie{
+// New constructs a new trie instance with a root node with no children.
+func New() *Trie {
+	return &Trie{
 		root: &node{
 			edgeLabel: "",
 			endOfWord: false,
@@ -25,15 +26,17 @@ func NewTrie() *trie {
 	}
 }
 
-// AddWord adds a given word to the trie t
-func (t *trie) AddWord(word string) {
+// AddWord adds a given word to the trie t.
+// It returns true if a new word was added or false if the word already existed.
+func (t *Trie) AddWord(word string) bool {
 	if len(word) == 0 {
-		return
+		return false
 	}
 
 	word = strings.ToLower(word)
 
 	currentNode := t.root
+	newWordAdded := false
 
 	for i := 0; i < len(word); {
 		char := word[i]
@@ -43,6 +46,8 @@ func (t *trie) AddWord(word string) {
 			// if the edge label for the child node matches what's left of the word
 			// edge label: 'abc', what's left of the word: 'abc'
 			if child.edgeLabel == word[i:] {
+				newWordAdded = !child.endOfWord
+
 				// mark the child node as an end of a word
 				child.endOfWord = true
 
@@ -68,6 +73,8 @@ func (t *trie) AddWord(word string) {
 
 				// make the new node a child of the current node
 				currentNode.children[char] = newNode
+
+				newWordAdded = true
 
 				break
 			}
@@ -97,6 +104,8 @@ func (t *trie) AddWord(word string) {
 					children: make(map[byte]*node),
 				}
 
+				newWordAdded = true
+
 				break
 			}
 
@@ -112,48 +121,102 @@ func (t *trie) AddWord(word string) {
 				children: make(map[byte]*node),
 			}
 
+			newWordAdded = true
+
 			break
 		}
 	}
 
-	return
+	return newWordAdded
 }
 
-// AddWords adds the given words to the trie t
-func (t *trie) AddWords(words []string) {
+// AddWords adds the given array of words to the trie t.
+// It returns a uint32 indicating the number of new words that where added, ignoring duplicates.
+func (t *Trie) AddWords(words []string) uint32 {
+	var wordsAdded uint32 = 0
+
 	for i := 0; i < len(words); i++ {
-		t.AddWord(words[i])
-	}
-
-	return
-}
-
-// DeleteWord removes the given word from the trie t
-func (t *trie) DeleteWord(word string) error {
-	// TODO implement
-	return nil
-}
-
-// DeleteWords removes the given words from the trie t
-func (t *trie) DeleteWords(words []string) error {
-	for i := 0; i < len(words); i++ {
-		if err := t.DeleteWord(words[i]); err != nil {
-			return err
+		if t.AddWord(words[i]) {
+			wordsAdded++
 		}
 	}
 
-	return nil
+	return wordsAdded
 }
 
-// HasWord checks to see if the given word exists in the trie t
-func (t trie) HasWord(word string) (bool, error) {
+// DeleteWord removes the given word from the trie t.
+// It returns a boolean of true if the given word was found and removed, false if the given word couldn't be found.
+func (t *Trie) DeleteWord(word string) bool {
 	// TODO implement
-	return false, nil
+	return false
 }
 
-// GetWordsFromPrefix returns all the words in trie t that have the given prefix
-func (t trie) GetWordsFromPrefix(prefix string) ([]string, error) {
-	// TODO implement
+// traverseTrie traverses down the trie with the given word
+// It returns the final node found or nil if nothing is found
+func (t *Trie) traverseTrie(word string) (*node, bool) {
+	word = strings.ToLower(word)
+	currentNode := t.root
+
+	for i := 0; i < len(word); {
+		char := word[i]
+
+		if child, ok := currentNode.children[char]; ok {
+			commonPrefix := getCommonPrefix(child.edgeLabel, word[i:])
+
+			// if the child's edge label differs from the given word, the given word doesn't exist in the trie
+			// this can be tested if the common prefix is different than the current edge label
+			if (commonPrefix != child.edgeLabel) {
+				break
+			}
+
+			// if the common prefix matches what's left of the word, than the child is the final node
+			if (commonPrefix == word[i:] && child.endOfWord) {
+				return child, true
+			}
+
+			i += len(child.edgeLabel)
+			currentNode = child
+		} else {
+			break
+		}
+	}
+
+	return nil, false
+}
+
+// HasWord checks to see if the given word exists in the trie t.
+// It returns a boolean of true if the given word exists in the trie, false otherwise.
+func (t Trie) HasWord(word string) bool {
+	_, ok := t.traverseTrie(word)
+
+	return ok
+}
+
+// dfsTrie depth first searches the trie starting at the given node.
+// It returns an array of word nodes that are found.
+func (start *node) dfsWords(wordSoFar string) []string {
 	words := make([]string, 0)
-	return words, nil
+
+	if start.endOfWord {
+		words = append(words, wordSoFar)
+	}
+
+	for _, child := range start.children {
+		words = append(words, child.dfsWords(wordSoFar + child.edgeLabel)...)
+	}
+
+	return words
+}
+
+// GetWordsFromPrefix returns all the words in trie t that have the given prefix.
+func (t Trie) GetWordsFromPrefix(prefix string) []string {
+	words := make([]string, 0)
+
+	prefixEndNode, ok := t.traverseTrie(prefix)
+	// if the prefix isn't even found in the trie, return the empty array
+	if !ok {
+		return words
+	}
+
+	return prefixEndNode.dfsWords(prefix)
 }
