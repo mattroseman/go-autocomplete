@@ -29,7 +29,7 @@ func TestAddWord(t *testing.T) {
 func BenchmarkAddWord(b *testing.B) {
 	file, err := os.Open("../data/words.txt")
 	if err != nil {
-		b.Error(err)
+		b.Errorf("%s\nMake sure to unzip data/words.zip into data/words.txt before running benchmarks", err)
 		return
 	}
 	defer file.Close()
@@ -73,7 +73,7 @@ func TestAddWords(t *testing.T) {
 func BenchmarkAddWords(b *testing.B) {
 	file, err := os.Open("../data/words.txt")
 	if err != nil {
-		b.Error(err)
+		b.Errorf("%s\nMake sure to unzip data/words.zip into data/words.txt before running benchmarks", err)
 		return
 	}
 	defer file.Close()
