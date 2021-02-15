@@ -1,12 +1,14 @@
 package trie
 
 type addWordTest struct {
+	name string
 	input string
 	expected Trie
 }
 
 var addWordTestCases = []addWordTest{
 	{
+		"nominal case",
 		"cucumber",
 		Trie{
 			root: &node{
@@ -21,20 +23,7 @@ var addWordTestCases = []addWordTest{
 		},
 	},
 	{
-		"test",
-		Trie{
-			root: &node{
-				children: map[byte]*node{
-					't': &node{
-						edgeLabel: "test",
-						endOfWord: true,
-						children: make(map[byte]*node),
-					},
-				},
-			},
-		},
-	},
-	{
+		"blank word",
 		"",
 		Trie{
 			root: &node{
@@ -45,6 +34,7 @@ var addWordTestCases = []addWordTest{
 		},
 	},
 	{
+		"variable case word",
 		"cUCumBeR",
 		Trie{
 			root: &node{
@@ -61,12 +51,14 @@ var addWordTestCases = []addWordTest{
 }
 
 type addWordsTest struct {
+	name string
 	input []string
 	expected Trie
 }
 
 var addWordsTestCases = []addWordsTest{
 	{
+		"empty array",
 		[]string{},
 		Trie{
 			root: &node{
@@ -77,6 +69,7 @@ var addWordsTestCases = []addWordsTest{
 		},
 	},
 	{
+		"words with shared prefix",
 		[]string{"cucumber", "banana", "bacon"},
 		Trie{
 			root: &node{
@@ -107,6 +100,7 @@ var addWordsTestCases = []addWordsTest{
 		},
 	},
 	{
+		"word with node already existing, but not endOfWord",
 		[]string{"benchpress", "bench"},
 		Trie{
 			root: &node{
@@ -127,6 +121,7 @@ var addWordsTestCases = []addWordsTest{
 		},
 	},
 	{
+		"shared prefix and already existing node, but not endOfWord",
 		[]string{"banana", "banner", "ban"},
 		Trie{
 			root: &node{
@@ -152,6 +147,7 @@ var addWordsTestCases = []addWordsTest{
 		},
 	},
 	{
+		"new node off existing node",
 		[]string{"ban", "banana"},
 		Trie{
 			root: &node{

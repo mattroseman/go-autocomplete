@@ -10,16 +10,19 @@ import (
 
 func TestAddWord(t *testing.T) {
 	for _, test := range addWordTestCases {
+		testName := test.name
 		testWord := test.input
 		expectedTrie := &test.expected
 
-		trie := New()
+		t.Run(testName, func(t *testing.T) {
+			trie := New()
 
-		trie.AddWord(testWord)
+			trie.AddWord(testWord)
 
-		if !reflect.DeepEqual(trie, expectedTrie) {
-			t.Errorf("The trie after adding word '%s' does not match the expected result", testWord)
-		}
+			if !reflect.DeepEqual(trie, expectedTrie) {
+				t.Errorf("The trie after adding word '%s' does not match the expected result", testWord)
+			}
+		})
 	}
 }
 
@@ -51,16 +54,19 @@ func BenchmarkAddWord(b *testing.B) {
 
 func TestAddWords(t *testing.T) {
 	for _, test := range addWordsTestCases {
+		testName := test.name
 		testWords := test.input
 		expectedTrie := &test.expected
 
-		trie := New()
+		t.Run(testName, func(t *testing.T) {
+			trie := New()
 
-		trie.AddWords(testWords)
+			trie.AddWords(testWords)
 
-		if !reflect.DeepEqual(trie, expectedTrie) {
-			t.Errorf("The trie after adding words %v does not match the expected result", testWords)
-		}
+			if !reflect.DeepEqual(trie, expectedTrie) {
+				t.Errorf("The trie after adding words %v does not match the expected result", testWords)
+			}
+		})
 	}
 }
 
@@ -92,35 +98,41 @@ func BenchmarkAddWords(b *testing.B) {
 
 func TestTraverseTrie(t *testing.T) {
 	for _, test := range traverseTrieTestCases {
+		testName := test.name
 		testTrie := test.trie
 		testWord := test.input
 		testSucceeds := test.succeeds
 		testExpected := test.expected
 
-		result, ok := testTrie.traverseTrie(testWord)
+		t.Run(testName, func(t *testing.T) {
+			result, ok := testTrie.traverseTrie(testWord)
 
-		if ok != testSucceeds {
-			t.Errorf("The word %s should have been found", testWord)
-			return
-		}
+			if ok != testSucceeds {
+				t.Errorf("The word %s should have been found", testWord)
+				return
+			}
 
-		if result != testExpected {
-			t.Errorf("the returned node %v does not match the expected node %v", *result, *testExpected)
-		}
+			if result != testExpected {
+				t.Errorf("the returned node %v does not match the expected node %v", *result, *testExpected)
+			}
+		})
 	}
 }
 
 func TestHasWord(t *testing.T) {
 	for _, test := range hasWordTestCases {
+		testName := test.name
 		testTrie := test.trie
 		testWord := test.input
 		testExpected := test.expected
 
-		result := testTrie.HasWord(testWord)
+		t.Run(testName, func(t *testing.T) {
+			result := testTrie.HasWord(testWord)
 
-		if result != testExpected {
-			t.Errorf("Expected HasWord(\"%s\") to return %t but got %t", testWord, testExpected, result)
-		}
+			if result != testExpected {
+				t.Errorf("Expected HasWord(\"%s\") to return %t but got %t", testWord, testExpected, result)
+			}
+		})
 	}
 }
 

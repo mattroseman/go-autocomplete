@@ -1,6 +1,7 @@
 package trie
 
 type hasWordTest struct {
+	name string
 	trie Trie
 	input string
 	expected bool
@@ -36,31 +37,37 @@ var hasWordTestTrie = Trie{
 
 var hasWordTestCases = []hasWordTest{
 	{
+		"nominal case",
 		hasWordTestTrie,
 		"cucumber",
 		true,
 	},
 	{
+		"word not in trie",
 		hasWordTestTrie,
 		"apple",
 		false,
 	},
 	{
+		"empty string",
 		hasWordTestTrie,
 		"",
 		false,
 	},
 	{
+		"node in trie but not endOfWord",
 		hasWordTestTrie,
 		"ban",
 		false,
 	},
 	{
+		"empty trie",
 		*New(),
 		"banana",
 		false,
 	},
 	{
+		"word with variable case",
 		hasWordTestTrie,
 		"CuCuMBEr",
 		true,
