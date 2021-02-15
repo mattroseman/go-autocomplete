@@ -17,6 +17,8 @@ var tests = []Test{
 	{"a", "a", "a"},
 	{"", "", ""},
 	{"optics", "optimize", "opti"},
+	// NOTE: this is a bad test case to test github workflows, make sure to delete
+	{"optics", "optimize", "abc"},
 }
 
 func TestGetCommonPrefix(t *testing.T) {
