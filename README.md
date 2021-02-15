@@ -10,5 +10,5 @@ Autocomplete library built with Trie data structures.
 `go test -v ./...` will run all tests.
 
 `go test -bench=. ./...` will run benchmarks.
-**BenchmarkAddWord** benchmarks how long it takes on average to add a word to the trie
-**BenchmarkAddWords**  benchmarks how long it takes to add the english dictionary to the trie
+- **BenchmarkAddWord** benchmarks how long it takes on average to add a word to the trie
+- **BenchmarkAddWords**  benchmarks how long it takes to add the english dictionary to the trie
