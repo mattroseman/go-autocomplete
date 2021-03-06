@@ -238,10 +238,17 @@ func (start *node) dfsWords(prefix string) []string {
 func (t Trie) GetWordsFromPrefix(prefix string) []string {
 	words := make([]string, 0)
 
-	prefixEndNode, ok := t.traverseTrie(prefix)
+	prefixEndNode, leftover := t.traverseTrie(prefix)
 	// if the prefix isn't even found in the trie, return the empty array
-	if !ok {
+	if prefixEndNode == nil {
 		return words
+	}
+
+	if len(leftover) > 0 {
+		nextNode := prefixEndNode.children[leftover[0]]
+		newPrefix := prefix + nextNode.edgeLabel[len(leftover):]
+
+		return nextNode.dfsWords(newPrefix)
 	}
 
 	return prefixEndNode.dfsWords(prefix)

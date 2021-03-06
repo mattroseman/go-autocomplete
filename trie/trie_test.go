@@ -172,7 +172,34 @@ func TestDFSWords(t *testing.T) {
 }
 
 func TestGetWordsFromPrefix(t *testing.T) {
-	t.Skip("not implemented")
+	for _, test := range getWordsFromPrefixTestCases {
+		testName := test.name
+		testTrie := test.trie
+		testPrefix := test.prefix
+		testExpected := test.expected
+
+		sort.Strings(testExpected)
+
+		t.Run(testName, func(t *testing.T) {
+			results := testTrie.GetWordsFromPrefix(testPrefix)
+			sort.Strings(results)
+
+			if len(results) != len(testExpected) {
+				t.Errorf("Expected GetWordsFromPrefix result to be %v but got %v", testExpected, results)
+			}
+
+			for i := range results {
+				resultWord := results[i]
+				expectedWord := testExpected[i]
+
+				if resultWord != expectedWord {
+					t.Errorf("Expected GetWordsFromPrefix result to be %v but got %v", testExpected, results)
+					break
+				}
+			}
+		})
+	}
+
 }
 
 func BenchmarkGetWordsFromPrefix(b *testing.B) {
