@@ -6,6 +6,7 @@ import (
 	"os"
 	"bufio"
 	"math/rand"
+	"sort"
 )
 
 func TestAddWord(t *testing.T) {
@@ -137,7 +138,29 @@ func TestHasWord(t *testing.T) {
 }
 
 func TestDFSWords(t *testing.T) {
-	t.Skip("not implemented")
+	for _, test := range dfsWordsTestCases {
+		testName := test.name
+		testStartNode := test.startNode
+		testPrefix := test.prefix
+		testExpected := test.expected
+
+		sort.Strings(testExpected)
+
+		t.Run(testName, func(t *testing.T) {
+			results := testStartNode.dfsWords(testPrefix)
+			sort.Strings(results)
+
+			for i := range results {
+				resultWord := results[i]
+				expectedWord := testExpected[i]
+
+				if resultWord != expectedWord {
+					t.Errorf("Expected dfsWords result to be %v but got %v", testExpected, results)
+					break
+				}
+			}
+		})
+	}
 }
 
 func TestGetWordsFromPrefix(t *testing.T) {

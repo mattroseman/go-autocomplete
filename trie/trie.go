@@ -193,16 +193,16 @@ func (t Trie) HasWord(word string) bool {
 }
 
 // dfsTrie depth first searches the trie starting at the given node.
-// It returns an array of word nodes that are found.
-func (start *node) dfsWords(wordSoFar string) []string {
+// It returns an array of words that are found from endOfWord node children.
+func (start *node) dfsWords(prefix string) []string {
 	words := make([]string, 0)
 
 	if start.endOfWord {
-		words = append(words, wordSoFar)
+		words = append(words, prefix)
 	}
 
 	for _, child := range start.children {
-		words = append(words, child.dfsWords(wordSoFar + child.edgeLabel)...)
+		words = append(words, child.dfsWords(prefix + child.edgeLabel)...)
 	}
 
 	return words
