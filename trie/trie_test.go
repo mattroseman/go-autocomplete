@@ -154,6 +154,10 @@ func TestDFSWords(t *testing.T) {
 			results := testStartNode.dfsWords(testPrefix)
 			sort.Strings(results)
 
+			if len(results) != len(testExpected) {
+				t.Errorf("Expected dfsWords result to be %v but got %v", testExpected, results)
+			}
+
 			for i := range results {
 				resultWord := results[i]
 				expectedWord := testExpected[i]
