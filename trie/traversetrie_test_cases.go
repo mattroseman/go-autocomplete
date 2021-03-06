@@ -66,6 +66,13 @@ var traverseTrieTestCases = []traverseTrieTest{
 		nil,
 	},
 	{
+		"encounters edgeLabel that matches first character but differs later",
+		traverseTrieTestTrie,
+		"banal",
+		false,
+		nil,
+	},
+	{
 		"word but with variable case",
 		traverseTrieTestTrie,
 		"BaNanA",
