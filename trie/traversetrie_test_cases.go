@@ -4,8 +4,8 @@ type traverseTrieTest struct {
 	name string
 	trie Trie
 	input string
-	succeeds bool
-	expected *node
+	expectedEndNode *node
+	expectedLeftover string
 }
 
 var traverseTrieTestTrie = Trie{
@@ -41,56 +41,63 @@ var traverseTrieTestCases = []traverseTrieTest{
 		"nominal case",
 		traverseTrieTestTrie,
 		"banana",
-		true,
 		traverseTrieTestTrie.root.children['b'].children['a'],
+		"",
 	},
 	{
 		"word not in trie",
 		traverseTrieTestTrie,
 		"superman",
-		false,
 		nil,
+		"",
 	},
 	{
 		"node in trie but not endOfWord",
 		traverseTrieTestTrie,
 		"ban",
-		false,
-		nil,
+		traverseTrieTestTrie.root.children['b'],
+		"",
 	},
 	{
 		"word has extra character",
 		traverseTrieTestTrie,
 		"bananas",
-		false,
 		nil,
+		"",
 	},
 	{
 		"encounters edgeLabel that matches first character but differs later",
 		traverseTrieTestTrie,
 		"banal",
-		false,
 		nil,
+		"",
 	},
 	{
 		"word but with variable case",
 		traverseTrieTestTrie,
 		"BaNanA",
-		true,
 		traverseTrieTestTrie.root.children['b'].children['a'],
+		"",
 	},
 	{
 		"empty string",
 		traverseTrieTestTrie,
 		"",
-		false,
 		nil,
+		"",
 	},
 	{
 		"empty trie",
 		*New(),
 		"banana",
-		false,
 		nil,
+		"",
+	},
+	{
+		"word ends on edgelabel",
+		traverseTrieTestTrie,
+		"banan",
+		traverseTrieTestTrie.root.children['b'],
+		"an",
 	},
 }

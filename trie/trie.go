@@ -151,9 +151,16 @@ func (t *Trie) DeleteWord(word string) bool {
 	return false
 }
 
-// traverseTrie traverses down the trie with the given word
-// It returns the final node found or nil if nothing is found
-func (t *Trie) traverseTrie(word string) (*node, bool) {
+// traverseTrie traverses down the trie with the given word.
+// It returns the final node found or nil if the given word doesn't exist in the trie (even as a prefix).
+// It also returns a string representing what's left of the given word not covered up till the returned node.
+// Ex 1: t.traverseTrie("foobar") => (nodeA, "") means trie t contains the word "foobar" up till nodeA with nothing left over
+//       (if foobar is an actual word can be determined by checking nodeA.endOfWord)
+// Ex 2: t.traverseTrie("foobar") => (nodeB, "bar") means trie t contains the word "foo" up till nodeB with "bar" left over
+//		 ("foobar" could still exist in trie t as a prefix, just not a word,
+//		  "foobarxyz" could exist as a word but the edgle label "barxyz" differs from what's left of the word "bar")
+// Ex 3: t.traverseTrie("foobar") => (nil, "") means trie t does not contain "foobar" as a word or even a prefix.
+func (t *Trie) traverseTrie(word string) (*node, string) {
 	word = strings.ToLower(word)
 	currentNode := t.root
 
@@ -161,19 +168,31 @@ func (t *Trie) traverseTrie(word string) (*node, bool) {
 		char := word[i]
 
 		if child, ok := currentNode.children[char]; ok {
+			// if the edge label matches what's left of the word, than the child is the final node
+			if (child.edgeLabel == word[i:]) {
+				// the entire word is in the trie and ends at the child node with nothing leftover
+				return child, ""
+			}
+
 			commonPrefix := getCommonPrefix(child.edgeLabel, word[i:])
 
-			// if the child's edge label differs from the given word, the given word doesn't exist in the trie
-			// this can be tested if the common prefix is different than the current edge label
-			if (commonPrefix != child.edgeLabel) {
-				break
+			// if the edge label for the child contains the entirety of what's left of the word plus some extra
+			// edge label: 'abcdef', what's left of the word: 'abc'
+			if len(commonPrefix) < len(child.edgeLabel) && len(commonPrefix) == len(word[i:]) {
+				// the word could exist in the trie as a prefix, but it does not end on a node, but partway through an edge label
+				return currentNode, word[i:]
 			}
 
-			// if the common prefix matches what's left of the word, than the child is the final node
-			if (commonPrefix == word[i:] && child.endOfWord) {
-				return child, true
+			// if the edge label and what's left of the word share a common prefix, but differ at some point
+			// edge label: 'abcdef', what's left of the word: 'abcxyz'
+			if len(commonPrefix) < len(child.edgeLabel) && len(commonPrefix) < len(word[i:]) {
+				// the word doesn't exist in the trie as a word or prefix
+				return nil, ""
 			}
 
+			// the last option is that what's left of the word contains the entirety of the edge label plus some extra
+			// edge label: 'abc', what's left of the word: 'abcdef'
+			// follow the edge to the next node and increment i to account for the edge's label
 			i += len(child.edgeLabel)
 			currentNode = child
 		} else {
@@ -181,15 +200,17 @@ func (t *Trie) traverseTrie(word string) (*node, bool) {
 		}
 	}
 
-	return nil, false
+	// there are no words in t that begin with the same character word begins with
+	return nil, ""
 }
 
 // HasWord checks to see if the given word exists in the trie t.
 // It returns a boolean of true if the given word exists in the trie, false otherwise.
 func (t Trie) HasWord(word string) bool {
-	_, ok := t.traverseTrie(word)
+	endNode, leftover := t.traverseTrie(word)
 
-	return ok
+	// if the given word ends cleanly on a node and that node is an endOfWord node the word exists in the trie t
+	return endNode != nil && endNode.endOfWord && leftover == ""
 }
 
 // dfsTrie depth first searches the trie starting at the given node.

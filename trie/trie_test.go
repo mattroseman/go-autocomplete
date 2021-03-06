@@ -102,19 +102,23 @@ func TestTraverseTrie(t *testing.T) {
 		testName := test.name
 		testTrie := test.trie
 		testWord := test.input
-		testSucceeds := test.succeeds
-		testExpected := test.expected
+		expectedEndNode := test.expectedEndNode
+		expectedLeftover := test.expectedLeftover
 
 		t.Run(testName, func(t *testing.T) {
-			result, ok := testTrie.traverseTrie(testWord)
+			resultEndNode, resultLeftover := testTrie.traverseTrie(testWord)
 
-			if ok != testSucceeds {
-				t.Errorf("The word %s should have been found", testWord)
+			if resultEndNode != expectedEndNode {
+				t.Errorf(
+					"The returned node %v does not match the expected node %v",
+					resultEndNode,
+					expectedEndNode,
+				)
 				return
 			}
 
-			if result != testExpected {
-				t.Errorf("the returned node %v does not match the expected node %v", *result, *testExpected)
+			if resultLeftover != expectedLeftover {
+				t.Errorf("The returned leftover string %s does not match the expected leftover string %s", resultLeftover, expectedLeftover)
 			}
 		})
 	}
