@@ -203,5 +203,36 @@ func TestGetWordsFromPrefix(t *testing.T) {
 }
 
 func BenchmarkGetWordsFromPrefix(b *testing.B) {
-	b.Skip("not implemented")
+	file, err := os.Open("../data/words.txt")
+	if err != nil {
+		b.Errorf("%s\nMake sure to unzip data/words.zip into data/words.txt before running benchmarks", err)
+		return
+	}
+	defer file.Close()
+
+	var words []string
+
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+	for scanner.Scan() {
+		words = append(words, scanner.Text())
+	}
+
+	trie := New()
+	trie.AddWords(words)
+
+	prefixes := make([]string, 0)
+	for i := 0; i < b.N; i++ {
+		randomWord := words[rand.Intn(len(words))]
+		prefix := randomWord[:rand.Intn(len(randomWord))]
+		prefixes = append(prefixes, prefix)
+	}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		trie.GetWordsFromPrefix(prefixes[i])
+	}
+
+	b.StopTimer()
 }
