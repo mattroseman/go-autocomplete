@@ -83,7 +83,7 @@ var traverseTrieTestCases = []traverseTrieTest{
 		"empty string",
 		traverseTrieTestTrie,
 		"",
-		nil,
+		traverseTrieTestTrie.root,
 		"",
 	},
 	{

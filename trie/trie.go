@@ -164,6 +164,11 @@ func (t *Trie) traverseTrie(word string) (*node, string) {
 	word = strings.ToLower(word)
 	currentNode := t.root
 
+	// a blank word ends at the root node of the trie
+	if word == "" {
+		return currentNode, ""
+	}
+
 	for i := 0; i < len(word); {
 		char := word[i]
 
