@@ -167,6 +167,41 @@ func TestDeleteWord(t *testing.T) {
 	}
 }
 
+func BenchmarkDeleteWord(b *testing.B) {
+	file, err := os.Open("../data/words.txt")
+	if err != nil {
+		b.Errorf("%s\nMake sure to unzip data/words.zip into data/words.txt before running benchmarks", err)
+		return
+	}
+	defer file.Close()
+
+	var words []string
+
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+	for scanner.Scan() {
+		words = append(words, scanner.Text())
+	}
+
+	trie := New()
+	trie.AddWords(words)
+
+	deleteWords := make([]string, 0)
+	for i := 0; i < b.N; i++ {
+		randomWord := words[rand.Intn(len(words))]
+		deleteWord := randomWord[:rand.Intn(len(randomWord))]
+		deleteWords = append(deleteWords, deleteWord)
+	}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		trie.DeleteWord(deleteWords[i])
+	}
+
+	b.StopTimer()
+}
+
 func TestDFSWords(t *testing.T) {
 	for _, test := range dfsWordsTestCases {
 		testName := test.name
