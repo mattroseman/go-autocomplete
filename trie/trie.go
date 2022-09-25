@@ -163,13 +163,6 @@ func (t *Trie) AddWords(words []string) uint32 {
 	return wordsAdded
 }
 
-// DeleteWord removes the given word from the trie t.
-// It returns a boolean of true if the given word was found and removed, false if the given word couldn't be found.
-func (t *Trie) DeleteWord(word string) bool {
-	// TODO implement
-	return false
-}
-
 // traverseTrie traverses down the trie with the given word.
 // It returns the final node found or nil if the given word doesn't exist in the trie (even as a prefix).
 // It also returns a string representing what's left of the given word not covered up till the returned node.
@@ -236,6 +229,46 @@ func (t Trie) HasWord(word string) bool {
 	// if the given word ends cleanly on a node and that node is an endOfWord node the word exists in the trie t
 	return endNode != nil && endNode.endOfWord && leftover == ""
 }
+
+// DeleteWord removes the given word from the trie t.
+// It returns a boolean of true if the given word was found and removed, false if the given word couldn't be found.
+func (t *Trie) DeleteWord(word string) bool {
+	if len(word) == 0 {
+		return false
+	}
+
+	wordNode, leftover := t.traverseTrie(word)
+
+	// if the given word isn't a node in the trie or isn't an endOfWord node
+	if wordNode == nil || len(leftover) > 0 || !wordNode.endOfWord {
+		return false
+	}
+
+	parentNode, _ := t.traverseTrie(word[:len(word) - 1])
+
+	// if node doesn't have any children, delete it from the parent node
+	if len(wordNode.children) == 0 {
+		delete(parentNode.children, wordNode.edgeLabel[0])
+		return true
+	}
+
+	// if the node has one child merge the child's edge label with the parent edge label
+	if len(wordNode.children) == 1 {
+		for key := range wordNode.children {
+			childNode := wordNode.children[key]
+			parentNode.children[wordNode.edgeLabel[0]] = childNode
+			childNode.edgeLabel = wordNode.edgeLabel + childNode.edgeLabel
+		}
+
+		return true
+	}
+
+	// if the node has multiple children mark the node as not endOfWord
+	wordNode.endOfWord = false
+
+	return true
+}
+
 
 // dfsTrie depth first searches the trie starting at the given node.
 // It returns an array of words that are found from endOfWord node children.

@@ -1,12 +1,12 @@
 package trie
 
 import (
-	"testing"
-	"reflect"
-	"os"
 	"bufio"
 	"math/rand"
+	"os"
+	"reflect"
 	"sort"
+	"testing"
 )
 
 func TestAddWord(t *testing.T) {
@@ -136,6 +136,32 @@ func TestHasWord(t *testing.T) {
 
 			if result != testExpected {
 				t.Errorf("Expected HasWord(\"%s\") to return %t but got %t", testWord, testExpected, result)
+			}
+		})
+	}
+}
+
+func TestDeleteWord(t *testing.T) {
+	for _, test := range deleteWordTestCases {
+		testName := test.name
+		testTrie := test.trie.deepCopy()
+		testWord := test.input
+		succeeds := test.succeeds
+		expectedTrie := test.expected.deepCopy()
+
+		t.Run(testName, func(t *testing.T) {
+			ok := testTrie.DeleteWord(testWord)
+
+			if ok != succeeds {
+				if succeeds {
+					t.Errorf("Expected DeleteWord(\"%s\") to succeed but it didn't find the word", testWord)
+				} else {
+					t.Errorf("Expected DeleteWord(\"%s\") to fail but it did find the word", testWord)
+				}
+			}
+
+			if !reflect.DeepEqual(testTrie, expectedTrie) {
+				t.Errorf("The trie after DeleteWord(\"%s\") doesn't match expected", testWord)
 			}
 		})
 	}
