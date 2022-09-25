@@ -9,6 +9,11 @@ Autocomplete library built with Trie data structures.
 
 `go test -v ./...` will run all tests.
 
+### TEST COVERAGE
+
+`go test ./... -coverprofile=coverage.out` will create the coverage report file.
+`go tool cover -html coverage.out` will open up an HTML view of the coverage report in your browser
+
 ## BENCHMARKS
 
 Before running benchmarks, unzip the `data/words.zip` file to `data/words.txt`. This file contains a list of english words used to benchmark with many words.
