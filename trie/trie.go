@@ -26,6 +26,25 @@ func New() *Trie {
 	}
 }
 
+func (t *Trie) deepCopy() *Trie {
+	newTrie := New()
+	newTrie.root = t.root.deepCopy()
+	return newTrie
+}
+
+func (n *node) deepCopy() *node {
+	newNode := &node{
+		edgeLabel: n.edgeLabel,
+		endOfWord: n.endOfWord,
+		children: make(map[byte]*node),
+	}
+	for key, child := range n.children {
+		newNode.children[key] = child.deepCopy()
+	}
+
+	return newNode
+}
+
 // AddWord adds a given word to the trie t.
 // It returns true if a new word was added or false if the word already existed.
 func (t *Trie) AddWord(word string) bool {
