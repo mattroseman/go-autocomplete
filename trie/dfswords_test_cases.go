@@ -1,33 +1,33 @@
 package trie
 
 type dfsWordsTest struct {
-	name string
+	name      string
 	startNode node
-	prefix string
-	expected []string
+	prefix    string
+	expected  []string
 }
 
 var dfsWordsTestTrie = Trie{
 	root: &node{
 		children: map[byte]*node{
-			'c': &node{
+			'c': {
 				edgeLabel: "cucumber",
 				endOfWord: true,
-				children: make(map[byte]*node),
+				children:  make(map[byte]*node),
 			},
-			'b': &node{
+			'b': {
 				edgeLabel: "ban",
 				endOfWord: false,
 				children: map[byte]*node{
-					'a': &node{
+					'a': {
 						edgeLabel: "ana",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
-					'n': &node{
+					'n': {
 						edgeLabel: "ner",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
 				},
 			},

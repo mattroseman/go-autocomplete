@@ -1,8 +1,8 @@
 package trie
 
 type addWordTest struct {
-	name string
-	input string
+	name     string
+	input    string
 	expected Trie
 }
 
@@ -13,10 +13,10 @@ var addWordTestCases = []addWordTest{
 		Trie{
 			root: &node{
 				children: map[byte]*node{
-					'c': &node{
+					'c': {
 						edgeLabel: "cucumber",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
 				},
 			},
@@ -29,7 +29,7 @@ var addWordTestCases = []addWordTest{
 			root: &node{
 				edgeLabel: "",
 				endOfWord: false,
-				children: make(map[byte]*node),
+				children:  make(map[byte]*node),
 			},
 		},
 	},
@@ -39,10 +39,10 @@ var addWordTestCases = []addWordTest{
 		Trie{
 			root: &node{
 				children: map[byte]*node{
-					'c': &node{
+					'c': {
 						edgeLabel: "cucumber",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
 				},
 			},
@@ -51,8 +51,8 @@ var addWordTestCases = []addWordTest{
 }
 
 type addWordsTest struct {
-	name string
-	input []string
+	name     string
+	input    []string
 	expected Trie
 }
 
@@ -64,7 +64,7 @@ var addWordsTestCases = []addWordsTest{
 			root: &node{
 				edgeLabel: "",
 				endOfWord: false,
-				children: make(map[byte]*node),
+				children:  make(map[byte]*node),
 			},
 		},
 	},
@@ -74,24 +74,24 @@ var addWordsTestCases = []addWordsTest{
 		Trie{
 			root: &node{
 				children: map[byte]*node{
-					'c': &node{
+					'c': {
 						edgeLabel: "cucumber",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
-					'b': &node{
+					'b': {
 						edgeLabel: "ba",
 						endOfWord: false,
 						children: map[byte]*node{
-							'n': &node{
+							'n': {
 								edgeLabel: "nana",
 								endOfWord: true,
-								children: make(map[byte]*node),
+								children:  make(map[byte]*node),
 							},
-							'c': &node{
+							'c': {
 								edgeLabel: "con",
 								endOfWord: true,
-								children: make(map[byte]*node),
+								children:  make(map[byte]*node),
 							},
 						},
 					},
@@ -105,14 +105,14 @@ var addWordsTestCases = []addWordsTest{
 		Trie{
 			root: &node{
 				children: map[byte]*node{
-					'b': &node{
+					'b': {
 						edgeLabel: "bench",
 						endOfWord: true,
 						children: map[byte]*node{
-							'p': &node{
+							'p': {
 								edgeLabel: "press",
 								endOfWord: true,
-								children: make(map[byte]*node),
+								children:  make(map[byte]*node),
 							},
 						},
 					},
@@ -126,19 +126,19 @@ var addWordsTestCases = []addWordsTest{
 		Trie{
 			root: &node{
 				children: map[byte]*node{
-					'b': &node{
+					'b': {
 						edgeLabel: "ban",
 						endOfWord: true,
 						children: map[byte]*node{
-							'a': &node{
+							'a': {
 								edgeLabel: "ana",
 								endOfWord: true,
-								children: make(map[byte]*node),
+								children:  make(map[byte]*node),
 							},
-							'n': &node{
+							'n': {
 								edgeLabel: "ner",
 								endOfWord: true,
-								children: make(map[byte]*node),
+								children:  make(map[byte]*node),
 							},
 						},
 					},
@@ -152,14 +152,14 @@ var addWordsTestCases = []addWordsTest{
 		Trie{
 			root: &node{
 				children: map[byte]*node{
-					'b': &node{
+					'b': {
 						edgeLabel: "ban",
 						endOfWord: true,
 						children: map[byte]*node{
-							'a': &node{
+							'a': {
 								edgeLabel: "ana",
 								endOfWord: true,
-								children: make(map[byte]*node),
+								children:  make(map[byte]*node),
 							},
 						},
 					},

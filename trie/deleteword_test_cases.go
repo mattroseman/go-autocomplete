@@ -1,9 +1,9 @@
 package trie
 
 type deleteWordTest struct {
-	name string
-	trie Trie
-	input string
+	name     string
+	trie     Trie
+	input    string
 	succeeds bool
 	expected Trie
 }
@@ -11,46 +11,46 @@ type deleteWordTest struct {
 var deleteWordTestTrie = Trie{
 	root: &node{
 		children: map[byte]*node{
-			'c': &node{
+			'c': {
 				edgeLabel: "cucumber",
 				endOfWord: true,
 				children: map[byte]*node{
-					's': &node{
+					's': {
 						edgeLabel: "s",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
 				},
 			},
-			'b': &node{
+			'b': {
 				edgeLabel: "ban",
 				endOfWord: false,
 				children: map[byte]*node{
-					'a': &node{
+					'a': {
 						edgeLabel: "ana",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
-					'n': &node{
+					'n': {
 						edgeLabel: "ner",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
 				},
 			},
-			'r': &node{
+			'r': {
 				edgeLabel: "real",
 				endOfWord: true,
 				children: map[byte]*node{
-					'y': &node{
+					'y': {
 						edgeLabel: "y",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
-					'i': &node{
+					'i': {
 						edgeLabel: "ity",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
 				},
 			},
@@ -61,40 +61,40 @@ var deleteWordTestTrie = Trie{
 var deleteWordTestTrie2 = Trie{
 	root: &node{
 		children: map[byte]*node{
-			'c': &node{
+			'c': {
 				edgeLabel: "cucumber",
 				endOfWord: true,
-				children: make(map[byte]*node),
+				children:  make(map[byte]*node),
 			},
-			'b': &node{
+			'b': {
 				edgeLabel: "ban",
 				endOfWord: false,
 				children: map[byte]*node{
-					'a': &node{
+					'a': {
 						edgeLabel: "ana",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
-					'n': &node{
+					'n': {
 						edgeLabel: "ner",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
 				},
 			},
-			'r': &node{
+			'r': {
 				edgeLabel: "real",
 				endOfWord: true,
 				children: map[byte]*node{
-					'y': &node{
+					'y': {
 						edgeLabel: "y",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
-					'i': &node{
+					'i': {
 						edgeLabel: "ity",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
 				},
 			},
@@ -105,40 +105,40 @@ var deleteWordTestTrie2 = Trie{
 var deleteWordTestTrie3 = Trie{
 	root: &node{
 		children: map[byte]*node{
-			'c': &node{
+			'c': {
 				edgeLabel: "cucumbers",
 				endOfWord: true,
-				children: make(map[byte]*node),
+				children:  make(map[byte]*node),
 			},
-			'b': &node{
+			'b': {
 				edgeLabel: "ban",
 				endOfWord: false,
 				children: map[byte]*node{
-					'a': &node{
+					'a': {
 						edgeLabel: "ana",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
-					'n': &node{
+					'n': {
 						edgeLabel: "ner",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
 				},
 			},
-			'r': &node{
+			'r': {
 				edgeLabel: "real",
 				endOfWord: true,
 				children: map[byte]*node{
-					'y': &node{
+					'y': {
 						edgeLabel: "y",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
-					'i': &node{
+					'i': {
 						edgeLabel: "ity",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
 				},
 			},
@@ -149,46 +149,46 @@ var deleteWordTestTrie3 = Trie{
 var deleteWordTestTrie4 = Trie{
 	root: &node{
 		children: map[byte]*node{
-			'c': &node{
+			'c': {
 				edgeLabel: "cucumber",
 				endOfWord: true,
 				children: map[byte]*node{
-					's': &node{
+					's': {
 						edgeLabel: "s",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
 				},
 			},
-			'b': &node{
+			'b': {
 				edgeLabel: "ban",
 				endOfWord: false,
 				children: map[byte]*node{
-					'a': &node{
+					'a': {
 						edgeLabel: "ana",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
-					'n': &node{
+					'n': {
 						edgeLabel: "ner",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
 				},
 			},
-			'r': &node{
+			'r': {
 				edgeLabel: "real",
 				endOfWord: false,
 				children: map[byte]*node{
-					'y': &node{
+					'y': {
 						edgeLabel: "y",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
-					'i': &node{
+					'i': {
 						edgeLabel: "ity",
 						endOfWord: true,
-						children: make(map[byte]*node),
+						children:  make(map[byte]*node),
 					},
 				},
 			},
@@ -210,7 +210,6 @@ var deleteWordTestCases = []deleteWordTest{
 		"foobar",
 		false,
 		deleteWordTestTrie,
-
 	},
 	{
 		"empty word",
